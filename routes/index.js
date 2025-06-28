@@ -31,6 +31,14 @@ router.get("/weather", async (req, res) => {
     );
     const weatherData = weatherRes.body;
 
+    // Logging for non-prod
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        "Weather Request URL:",
+        `${API_WEATHER_BASE_URL}?lat=${lat}&lon=${lon}&${API_KEY_NAME}=${API_KEY_VALUE}`
+      );
+    }
+
     res.status(200).json(weatherData);
   } catch (error) {
     res.status(500).json({ error });
