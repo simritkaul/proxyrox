@@ -1,13 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const needle = require("needle");
+const apiCache = require("apicache");
 
 const API_GEO_BASE_URL = process.env.API_GEO_BASE_URL;
 const API_WEATHER_BASE_URL = process.env.API_WEATHER_BASE_URL;
 const API_KEY_NAME = process.env.API_KEY_NAME;
 const API_KEY_VALUE = process.env.API_KEY_VALUE;
 
-router.get("/weather", async (req, res) => {
+// Initialize cache
+const cache = apiCache.middleware;
+
+router.get("/weather", cache("2 minutes"), async (req, res) => {
   const { cityName } = req.query;
   if (!cityName) {
     return res.status(400).json({ error: "City name is required" });
